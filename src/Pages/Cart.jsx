@@ -1,11 +1,23 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import emptycart from "../assets/Images/emptycart.png";
 import { FaTrashAlt } from "react-icons/fa";
+import Modal from "../Components/Modal";
+import ChangeAddress from "../Components/ChangeAddress";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from "../Redux/CartSlice";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("main street 0012");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   return (
     <div className="conatainer mx-auto py-8 min-h-96 w-full px-4 md:px-16 lg:px-24 ">
       {cart.products.length > 0 ? (
@@ -34,14 +46,25 @@ const Cart = () => {
                     <div className="flex space-x-8 md:space-x-12 items-center">
                       <p>${product.price}</p>
                       <div className="flex items-center justify-center border">
-                        <button className="text-xl font-bold px-1.5 border-r">
+                        <button
+                          className="text-xl font-bold px-1.5 border-r"
+                          onClick={() => dispatch(decreaseQuantity(product.id))}
+                        >
                           -
                         </button>
                         <p className="text-xl px-2">{product.quantity}</p>
-                        <button>+</button>
+                        <button
+                          className="text-xl px-1 border-l"
+                          onClick={() => dispatch(increaseQuantity(product.id))}
+                        >
+                          +
+                        </button>
                       </div>
                       <p>${(product.quantity * product.price).toFixed(2)}</p>
-                      <button className="text-red-500 hover:text-red-700">
+                      <button
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => dispatch(removeFromCart(product.id))}
+                      >
                         <FaTrashAlt />
                       </button>
                     </div>
@@ -59,21 +82,34 @@ const Cart = () => {
               </div>
               <div className="mb-4 border-b pb-2">
                 <p>Shipping</p>
-                <p>Shipping to: </p>
-                <span className="text-md font-bold">{address}</span>
-                <button className="text-blue-500 hover:underline mt-1 ml-2">
-                  Enter Address
+                <span>Shipping to: </span>
+                <span className="text-sm font-bold">{address}</span>
+                <br />
+                <button
+                  className="text-blue-500 hover:underline mt-1 "
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  Change address
                 </button>
               </div>
               <div className="flex justify-between mb-4">
                 <span>Total Price: </span>
                 <span>{cart.totalPrice.toFixed(2)}</span>
               </div>
-              <button className="w-full bg-red-600 text-white py-2 hover:bg-red-800">
+              <button
+                className="w-full bg-red-600 text-white py-2 hover:bg-red-800"
+                onClick={() => navigate("/checkout")}
+              >
                 Proceed to Checkout
               </button>
             </div>
           </div>
+          <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
+            <ChangeAddress
+              setAddress={setAddress}
+              setIsModalOpen={setIsModalOpen}
+            />
+          </Modal>
         </div>
       ) : (
         <div className="flex justify-center">
