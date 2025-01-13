@@ -45,7 +45,7 @@ const Footer = () => {
     },
   ];
   return (
-    <footer className="bg-gray-800 text-white py-8 px-4 md:px-16 lg:px-24 w-fit">
+    <footer className="bg-gray-800 text-white py-8 px-4 md:px-16 lg:px-24 ">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <h2 className="font-bold pb-4 text-md sm:text-lg md:text-xl">
@@ -80,17 +80,6 @@ const Footer = () => {
               </a>
             ))}
           </div>
-
-          <form className="flex items-center justify-center">
-            <input
-              type="email"
-              placeholder="your email"
-              className="bg-transparent border border-gray-600 p-2 rounded-l-lg w-full"
-            />
-            <button className="bg-red-600 text-white p-2 rounded-r-lg border border-gray-600">
-              Subscribe
-            </button>
-          </form>
         </div>
       </div>
 
